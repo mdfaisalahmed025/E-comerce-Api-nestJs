@@ -1,11 +1,14 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IsEmail } from "class-validator"
 
-const crypto = require('crypto');
-const secretKey = 'my-secret-key';
-const maxValue = 10000;
 
-let userCount = Math.random()
+
+export enum UserRole {
+    ADMIN = 'admin',
+    USER = 'user',
+}
+
+let userCount = Math.floor(Math.random()*1000)
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -21,6 +24,7 @@ export class User {
     firstName: string
     @Column({ type: "varchar" })
     lastName: string
+    @IsEmail()
     @Column({ type: "varchar" })
     email: string
     @Column({ type: "varchar" })
@@ -47,5 +51,11 @@ export class User {
     isLocked: boolean;
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     join_At: Date;
+    @Column({
+        type: 'enum',
+        enum: UserRole,
+        default: UserRole.USER, // Set the default role to 'user'
+    })
+    Role: UserRole
 
 }
